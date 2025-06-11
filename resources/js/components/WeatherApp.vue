@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="min-h-screen bg-gradient-to-br from-blue-100 to-white dark:from-gray-900 dark:to-gray-800 py-6 px-4 pb-20">
+    <div class="min-h-screen bg-gradient-to-br from-blue-100 to-white dark:from-gray-900 dark:to-gray-800 py-6 px-4 pb-24">
       <div class="max-w-3xl mx-auto bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-xl rounded-2xl p-6">
 
         <!-- Dark Mode Toggle -->
@@ -38,7 +38,7 @@
         </div>
 
         <!-- Weather Forecast -->
-        <div v-if="weather.list">
+        <div ref="weatherSection" v-if="weather.list">
           <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-3">5-Day Weather Forecast</h2>
           <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
             <div
@@ -57,7 +57,7 @@
         </div>
 
         <!-- Places -->
-        <div v-if="filteredPlaces.length" class="mt-10">
+        <div ref="placesSection" v-if="filteredPlaces.length" class="mt-10">
           <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-3">Top Places to Visit</h2>
           <div class="grid gap-4 sm:grid-cols-2">
             <div
@@ -73,20 +73,30 @@
           </div>
         </div>
 
+        <!-- Map -->
+        <div ref="mapSection" class="mt-10">
+          <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-3">City Map</h2>
+             <iframe
+            class="w-full h-64 rounded-lg"
+            :src="`https://www.google.com/maps?q=${city},Japan&output=embed`"
+            allowfullscreen=""
+            loading="lazy"
+          ></iframe>
+        </div>
       </div>
     </div>
 
     <!-- Bottom Mobile Navigation -->
     <div class="fixed w-full bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-inner border-t dark:border-gray-700 flex justify-around py-2 sm:hidden z-50">
-      <button class="flex flex-col items-center text-blue-600 dark:text-blue-300 text-sm">
+      <button @click="scrollTo('weatherSection')" :class="navActive === 'weatherSection' ? 'text-blue-600 dark:text-blue-300 font-bold' : 'text-gray-600 dark:text-gray-300'" class="flex flex-col items-center text-sm">
         <span>🌤</span>
         <span>Weather</span>
       </button>
-      <button class="flex flex-col items-center text-gray-600 dark:text-gray-300 text-sm">
+      <button @click="scrollTo('placesSection')" :class="navActive === 'placesSection' ? 'text-blue-600 dark:text-blue-300 font-bold' : 'text-gray-600 dark:text-gray-300'" class="flex flex-col items-center text-sm">
         <span>📍</span>
         <span>Places</span>
       </button>
-      <button class="flex flex-col items-center text-gray-600 dark:text-gray-300 text-sm">
+      <button @click="scrollTo('mapSection')" :class="navActive === 'mapSection' ? 'text-blue-600 dark:text-blue-300 font-bold' : 'text-gray-600 dark:text-gray-300'" class="flex flex-col items-center text-sm">
         <span>🗺</span>
         <span>Map</span>
       </button>
@@ -104,7 +114,8 @@ export default {
       places: {},
       isDark: false,
       loading: false,
-      filterKeyword: ''
+      filterKeyword: '',
+      navActive: 'weatherSection'
     };
   },
   watch: {
@@ -123,9 +134,12 @@ export default {
     this.loadData();
     const savedTheme = localStorage.getItem('theme');
     this.isDark = savedTheme === 'dark';
-    if (this.isDark) {
-      document.documentElement.classList.add('dark');
-    }
+    if (this.isDark) document.documentElement.classList.add('dark');
+
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
     async loadData() {
@@ -139,6 +153,26 @@ export default {
         console.error('Error loading data:', e);
       } finally {
         this.loading = false;
+      }
+    },
+    scrollTo(refName) {
+      const section = this.$refs[refName];
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+        this.navActive = refName;
+      }
+    },
+    handleScroll() {
+      const sections = ['weatherSection', 'placesSection', 'mapSection'];
+      for (let sec of sections) {
+        const el = this.$refs[sec];
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            this.navActive = sec;
+            break;
+          }
+        }
       }
     }
   },
