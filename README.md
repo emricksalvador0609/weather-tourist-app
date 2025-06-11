@@ -26,13 +26,38 @@ A responsive, modern travel information app for foreign tourists visiting Japan.
 
 ---
 
-## ⚙️ Setup & API Keys
+## ⚙️ Setup , API Keys and Run Project
 
 1. **Clone the repo**:
-   ```bash
+```bash
    git clone https://github.com/your-username/japan-travel-app.git
    cd japan-travel-app
 
-2. **Install dependencies:**:
- 
-   npm install
+2. **Install dependencies**:
+ ```bash
+    npm install
+
+3. **Set environment variables**:
+  - **Create** a  ```.env file and add the following:
+```bash
+       ```OPENWEATHER_API_KEY=your_openweathermap_key
+       ```FOURSQUARE_API_KEY=your_foursquare_key
+
+
+3. **Start the server**:
+```bash
+   npm run dev
+
+4. **Run APP_URL**:
+ - [http://localhost ](http://localhost)
+
+---
+
+##  ✨ Why This UI/UX?
+
+This app was designed with first-time tourists in mind:
+- Mobile-first layout with touch-friendly bottom navigation.
+- Dark mode support improves night-time usability and accessibility.
+- 🌗 **Dark Mode**: Local storage-based toggle for better UX.
+- 📱 **Responsive Design**: Mobile-first layout with bottom navigation.
+- 🔍 **Place Filter**: Real-time search filtering for places.
