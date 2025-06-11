@@ -31,7 +31,7 @@ A responsive, modern travel information app for foreign tourists visiting Japan.
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/japan-travel-app.git
+git clone https://github.com/emricksalvador0609/weather-tourist-app.git
 cd japan-travel-app
 ```
 
