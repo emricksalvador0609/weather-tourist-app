@@ -60,7 +60,7 @@ npm run dev
 
 ### 5. Open in browser
 
-Visit: [http://localhost](http://localhost)
+Visit: [http://localhost:8000](http://localhost:8000)
 
 ---
 
